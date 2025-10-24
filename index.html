@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <link rel="shortcut icon" href="logo.avif">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>تطبيق تسجيل أرقام الهواتف</title>
   <!-- Bootstrap CSS -->
@@ -105,7 +106,6 @@
       padding: 30px;
     }
 
-    /* Form Styles */
     .form-group {
       margin-bottom: 20px;
     }
@@ -118,7 +118,8 @@
     }
 
     .form-control,
-    .form-select {
+    .form-select,
+    .form-control textarea {
       border: 2px solid #e0e0e0;
       border-radius: 12px;
       padding: 12px 16px;
@@ -127,7 +128,8 @@
     }
 
     .form-control:focus,
-    .form-select:focus {
+    .form-select:focus,
+    .form-control textarea:focus {
       border-color: #667eea;
       box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
       outline: none;
@@ -135,12 +137,6 @@
 
     .form-select {
       direction: ltr;
-    }
-
-    /* Image Upload Area */
-    .image-upload-area {
-      text-align: center;
-      margin-bottom: 20px;
     }
 
     .avatar-preview {
@@ -175,11 +171,6 @@
       color: #999;
     }
 
-    .file-input-wrapper {
-      position: relative;
-      display: inline-block;
-    }
-
     .file-input-wrapper input[type="file"] {
       position: absolute;
       opacity: 0;
@@ -203,7 +194,6 @@
       box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
     }
 
-    /* Buttons */
     .btn-primary {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       border: none;
@@ -220,16 +210,33 @@
       box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
     }
 
-    /* Search and Filter */
+    .btn-secondary {
+      background: #6c757d;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+      transform: translateY(-2px);
+    }
+
     .search-filter-bar {
       display: flex;
       gap: 15px;
       margin-bottom: 25px;
+      flex-wrap: wrap;
     }
 
     .search-wrapper {
       position: relative;
       flex: 1;
+      min-width: 200px;
     }
 
     .search-icon {
@@ -245,7 +252,6 @@
       padding-right: 45px;
     }
 
-    /* Stats Card */
     .stats-card {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
@@ -274,7 +280,6 @@
       opacity: 0.9;
     }
 
-    /* Contact Item */
     .contact-item {
       background: white;
       border-radius: 16px;
@@ -342,8 +347,11 @@
       font-weight: 600;
     }
 
-    .contact-phone a:hover {
-      text-decoration: underline;
+    .contact-bio {
+      font-size: 0.9rem;
+      color: #888;
+      margin: 5px 0;
+      max-width: 300px;
     }
 
     .contact-category {
@@ -359,6 +367,7 @@
     .contact-actions {
       display: flex;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     .btn-action {
@@ -372,6 +381,16 @@
       font-size: 1.2rem;
       cursor: pointer;
       transition: all 0.3s ease;
+    }
+
+    .btn-edit {
+      background: linear-gradient(135deg, #339af0 0%, #228be6 100%);
+      color: white;
+    }
+
+    .btn-edit:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(51, 154, 240, 0.4);
     }
 
     .btn-delete {
@@ -394,7 +413,6 @@
       box-shadow: 0 6px 20px rgba(81, 207, 102, 0.4);
     }
 
-    /* Empty State */
     .empty-state {
       text-align: center;
       padding: 60px 20px;
@@ -413,11 +431,6 @@
       margin-bottom: 10px;
     }
 
-    .empty-state p {
-      color: #999;
-    }
-
-    /* Custom Alert Styles */
     .custom-alert-overlay {
       position: fixed;
       top: 0;
@@ -459,8 +472,10 @@
       background: white;
       border-radius: 24px;
       padding: 40px;
-      max-width: 450px;
+      max-width: 550px;
       width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
       box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
       animation: slideDown 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
       text-align: center;
@@ -487,6 +502,10 @@
       color: #667eea;
     }
 
+    .custom-alert-icon.edit {
+      color: #339af0;
+    }
+
     .custom-alert-title {
       font-size: 1.8rem;
       font-weight: 700;
@@ -499,12 +518,14 @@
       color: #666;
       margin-bottom: 30px;
       line-height: 1.6;
+      text-align: center;
     }
 
     .custom-alert-buttons {
       display: flex;
       gap: 15px;
       justify-content: center;
+      flex-wrap: wrap;
     }
 
     .custom-alert-btn {
@@ -537,7 +558,6 @@
       background: #e9ecef;
     }
 
-    /* Toast Notification */
     .toast-notification {
       position: fixed;
       top: 30px;
@@ -599,7 +619,85 @@
       color: #666;
     }
 
-    /* Category Colors */
+    .pagination-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 25px;
+      flex-wrap: wrap;
+    }
+
+    .pagination-btn {
+      padding: 10px 15px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .pagination-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+    }
+
+    .pagination-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .pagination-info {
+      color: #666;
+      font-weight: 600;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-btn {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toolbar-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(81, 207, 102, 0.4);
+    }
+
+    .toolbar-btn.export {
+      background: linear-gradient(135deg, #339af0 0%, #228be6 100%);
+    }
+
+    .toolbar-btn.export:hover {
+      box-shadow: 0 6px 16px rgba(51, 154, 240, 0.4);
+    }
+
+    .form-group.form-check {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-group.form-check input {
+      width: auto;
+    }
+
     .category-عائلة {
       background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
     }
@@ -615,6 +713,10 @@
     .category-أخرى {
       background: linear-gradient(135deg, #ffd43b 0%, #fab005 100%);
     }
+
+    .text-start {
+      text-align: right;
+    }
   </style>
 </head>
 
@@ -627,15 +729,67 @@
           <i :class="getAlertIcon()"></i>
         </div>
         <div class="custom-alert-title">{{ alertData.title }}</div>
-        <div class="custom-alert-message">{{ alertData.message }}</div>
-        <div class="custom-alert-buttons">
+
+        <!-- Edit Form in Alert -->
+        <div v-if="alertData.type === 'edit'" class="text-end">
+          <div class="form-group">
+            <label class="form-label"><i class="bi bi-person ms-1"></i> الاسم</label>
+            <input v-model="editingContact.name" type="text" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i class="bi bi-telephone ms-1"></i> رقم الهاتف</label>
+            <input v-model="editingContact.phone" type="tel" class="form-control text-end" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i class="bi bi-file-text ms-1"></i> النبذة</label>
+            <textarea style="resize: none;" v-model="editingContact.bio" class="form-control" rows="3"
+              placeholder="أدخل نبذة عن جهة الاتصال"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i class="bi bi-tag ms-1"></i> الفئة</label>
+            <select v-model="editingContact.category" class="form-select">
+              <option value="عائلة">عائلة</option>
+              <option value="أصدقاء">أصدقاء</option>
+              <option value="عمل">عمل</option>
+              <option value="أخرى">أخرى</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i class="bi bi-image ms-1"></i> الصورة</label>
+            <div class="avatar-preview" @click="triggerEditFileInput()" style="margin-bottom: 15px;">
+              <img v-if="editingContact.image" :src="editingContact.image" alt="الصورة">
+              <div v-else class="avatar-preview-placeholder">
+                <i class="bi bi-camera-fill"></i>
+              </div>
+            </div>
+            <input type="file" ref="editFileInput" @change="handleEditImageUpload" accept="image/*"
+              style="display: none;">
+            <button type="button" @click="triggerEditFileInput()" class="btn btn-secondary w-100">
+              <i class="bi bi-upload ms-1"></i> تغيير الصورة
+            </button>
+          </div>
+        </div>
+
+        <!-- Regular Message in Alert -->
+        <div v-else class="custom-alert-message">{{ alertData.message }}</div>
+
+        <div class="custom-alert-buttons" v-if="alertData.type !== 'edit'">
           <button v-if="alertData.type === 'confirm'" @click="confirmAction"
             class="custom-alert-btn custom-alert-btn-primary">
             تأكيد
           </button>
           <button @click="closeAlert" class="custom-alert-btn"
-            :class="alertData.type === 'confirm' ? 'custom-alert-btn-secondary' : 'custom-alert-btn-primary'">
+            :class="alertData.type === 'confirm' || alertData.type === 'edit' ? 'custom-alert-btn-secondary' : 'custom-alert-btn-primary'">
             {{ alertData.type === 'confirm' ? 'إلغاء' : 'حسناً' }}
+          </button>
+        </div>
+
+        <div class="custom-alert-buttons" v-if="alertData.type === 'edit'">
+          <button @click="saveEditedContact" class="custom-alert-btn custom-alert-btn-primary">
+            <i class="bi bi-check-circle ms-1"></i> حفظ التعديرات
+          </button>
+          <button @click="closeAlert" class="custom-alert-btn custom-alert-btn-secondary">
+            <i class="bi bi-x-circle ms-1"></i> إلغاء
           </button>
         </div>
       </div>
@@ -655,7 +809,7 @@
 
     <!-- App Header -->
     <div class="app-header">
-      <h1><i class="bi bi-phone-fill"></i> دفتر هواتف المحمول الخاصة بك</h1>
+      <h1><i class="bi bi-phone-fill"></i> دفتر الهواتف الخاص بك</h1>
       <p>نظام احترافي لإدارة جهات الاتصال</p>
     </div>
 
@@ -672,7 +826,7 @@
         <div class="card-body">
           <form @submit.prevent="addContact">
             <!-- Image Upload -->
-            <div class="image-upload-area">
+            <div style="text-align: center; margin-bottom: 20px;">
               <div class="avatar-preview" @click="$refs.fileInput.click()">
                 <img v-if="newContact.image" :src="newContact.image" alt="صورة جهة الاتصال">
                 <div v-else class="avatar-preview-placeholder">
@@ -701,7 +855,17 @@
               <label class="form-label">
                 <i class="bi bi-telephone ms-1"></i> رقم الهاتف
               </label>
-              <input style="direction: rtl;" v-model="newContact.phone" type="tel" class="form-control" placeholder="أدخل رقم الهاتف" required>
+              <input style="direction: rtl;" v-model="newContact.phone" type="tel" class="form-control"
+                placeholder="أدخل رقم الهاتف" required>
+            </div>
+
+            <!-- Bio Input -->
+            <div class="form-group">
+              <label class="form-label">
+                <i class="bi bi-file-text ms-1"></i> النبذة
+              </label>
+              <textarea style="resize: none;" v-model="newContact.bio" class="form-control" rows="2"
+                placeholder="أدخل نبذة عن جهة الاتصال (اختياري)"></textarea>
             </div>
 
             <!-- Category Select -->
@@ -739,9 +903,20 @@
               <i class="bi bi-person-lines-fill"></i>
             </div>
             <div class="stats-content">
-              <h4>{{ filteredContacts.length }}</h4>
-              <p>جهة اتصال</p>
+              <h4>{{ contacts.length }}</h4>
+              <p>إجمالي جهات الاتصال</p>
             </div>
+          </div>
+
+          <!-- Toolbar -->
+          <div class="toolbar">
+            <button @click="exportContacts" class="toolbar-btn export">
+              <i class="bi bi-download"></i> تصدير JSON
+            </button>
+            <button @click="triggerImportFile()" class="toolbar-btn">
+              <i class="bi bi-upload"></i> استيراد JSON
+            </button>
+            <input type="file" ref="importFileInput" @change="importContacts" accept=".json" style="display: none;">
           </div>
 
           <!-- Search and Filter -->
@@ -761,8 +936,8 @@
           </div>
 
           <!-- Contacts List -->
-          <div v-if="filteredContacts.length > 0">
-            <div v-for="contact in filteredContacts" :key="contact.id" class="contact-item">
+          <div v-if="paginatedContacts.length > 0">
+            <div v-for="contact in paginatedContacts" :key="contact.id" class="contact-item">
               <div class="contact-avatar">
                 <img v-if="contact.image" :src="contact.image" :alt="contact.name">
                 <span v-else>{{ getInitials(contact.name) }}</span>
@@ -773,15 +948,21 @@
                   <i class="bi bi-telephone-fill ms-1"></i>
                   <a :href="'tel:' + contact.phone" style="text-decoration: underline;">{{ contact.phone }}</a>
                 </div>
+                <div v-if="contact.bio" class="contact-bio">
+                  <i class="bi bi-file-text ms-1"></i> {{ contact.bio }}
+                </div>
                 <span class="contact-category" :class="'category-' + contact.category">
                   {{ contact.category }}
                 </span>
               </div>
               <div class="contact-actions">
-                <a :href="'https://wa.me/' + contact.phone" class="btn-action btn-call">
+                <a :href="'https://wa.me/' + contact.phone" class="btn-action btn-call" title="واتس آب">
                   <i class="bi bi-chat-left-text"></i>
                 </a>
-                <button @click="deleteContact(contact.id)" class="btn-action btn-delete">
+                <button @click="editContact(contact)" class="btn-action btn-edit" title="تعديل">
+                  <i class="bi bi-pencil-fill"></i>
+                </button>
+                <button @click="deleteContact(contact.id)" class="btn-action btn-delete" title="حذف">
                   <i class="bi bi-trash-fill"></i>
                 </button>
               </div>
@@ -793,6 +974,17 @@
             <i class="bi bi-inbox"></i>
             <h4>لا توجد جهات اتصال</h4>
             <p>ابدأ بإضافة جهة اتصال جديدة من القائمة الجانبية</p>
+          </div>
+
+          <!-- Pagination -->
+          <div v-if="totalPages > 1" class="pagination-container">
+            <button @click="previousPage" :disabled="currentPage === 1" class="pagination-btn">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+            <span class="pagination-info">الصفحة {{ currentPage }} من {{ totalPages }}</span>
+            <button @click="nextPage" :disabled="currentPage === totalPages" class="pagination-btn">
+              <i class="bi bi-chevron-left"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -814,11 +1006,16 @@
           newContact: {
             name: '',
             phone: '',
+            bio: '',
             category: 'عائلة',
             image: ''
           },
+          editingContact: null,
+          editingContactId: null,
           searchQuery: '',
           filterCategory: '',
+          currentPage: 1,
+          contactsPerPage: 5,
           alertData: {
             show: false,
             type: 'success',
@@ -827,8 +1024,7 @@
             confirmCallback: null
           },
           toasts: [],
-          toastIdCounter: 0,
-          contactToDelete: null
+          toastIdCounter: 0
         }
       },
       computed: {
@@ -849,9 +1045,28 @@
           }
 
           return result;
+        },
+        totalPages() {
+          return Math.ceil(this.filteredContacts.length / this.contactsPerPage);
+        },
+        paginatedContacts() {
+          const start = (this.currentPage - 1) * this.contactsPerPage;
+          const end = start + this.contactsPerPage;
+          return this.filteredContacts.slice(start, end);
+        }
+      },
+      watch: {
+        filteredContacts() {
+          this.currentPage = 1;
         }
       },
       methods: {
+        triggerEditFileInput() {
+          this.$refs.editFileInput.click();
+        },
+        triggerImportFile() {
+          this.$refs.importFileInput.click();
+        },
         handleImageUpload(event) {
           const file = event.target.files[0];
           if (file) {
@@ -863,6 +1078,21 @@
             const reader = new FileReader();
             reader.onload = (e) => {
               this.newContact.image = e.target.result;
+            };
+            reader.readAsDataURL(file);
+          }
+        },
+        handleEditImageUpload(event) {
+          const file = event.target.files[0];
+          if (file) {
+            if (file.size > 5000000) {
+              this.showAlert('warning', 'تنبيه', 'حجم الصورة كبير جداً. الرجاء اختيار صورة أصغر من 5 ميجابايت');
+              return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              this.editingContact.image = e.target.result;
             };
             reader.readAsDataURL(file);
           }
@@ -885,13 +1115,8 @@
         },
         closeAlert() {
           this.alertData.show = false;
-          this.contactToDelete = null;
-        },
-        confirmAction() {
-          if (this.alertData.confirmCallback) {
-            this.alertData.confirmCallback();
-          }
-          this.closeAlert();
+          this.editingContact = null;
+          this.editingContactId = null;
         },
         confirmAction() {
           if (this.alertData.confirmCallback) {
@@ -909,6 +1134,7 @@
             id: Date.now(),
             name: this.newContact.name.trim(),
             phone: this.newContact.phone.trim(),
+            bio: this.newContact.bio.trim(),
             category: this.newContact.category,
             image: this.newContact.image
           };
@@ -918,19 +1144,37 @@
 
           this.showToast('تمت الإضافة', 'تمت إضافة جهة الاتصال بنجاح', 'bi bi-check-circle-fill', '#51cf66');
 
-          // إعادة تعيين الحقول
           this.newContact = {
             name: '',
             phone: '',
+            bio: '',
             category: 'عائلة',
             image: ''
           };
+        },
+        editContact(contact) {
+          this.editingContactId = contact.id;
+          this.editingContact = JSON.parse(JSON.stringify(contact));
+          this.showAlert('edit', 'تعديل جهة الاتصال', '');
+        },
+        saveEditedContact() {
+          if (!this.editingContact.name || !this.editingContact.phone) {
+            this.showAlert('error', 'خطأ', 'الرجاء إدخال الاسم ورقم الهاتف');
+            return;
+          }
+
+          const index = this.contacts.findIndex(c => c.id === this.editingContactId);
+          if (index !== -1) {
+            this.contacts[index] = JSON.parse(JSON.stringify(this.editingContact));
+            this.saveContacts();
+            this.showToast('تم التحديث', 'تم تحديث جهة الاتصال بنجاح', 'bi bi-check-circle-fill', '#51cf66');
+            this.closeAlert();
+          }
         },
         deleteContact(id) {
           const contact = this.contacts.find(c => c.id === id);
           if (!contact) return;
 
-          this.contactToDelete = id;
           this.showAlert(
             'confirm',
             'تأكيد الحذف',
@@ -942,13 +1186,106 @@
             }
           );
         },
+        exportContacts() {
+          if (this.contacts.length === 0) {
+            this.showAlert('warning', 'تنبيه', 'لا توجد جهات اتصال للتصدير');
+            return;
+          }
+
+          const dataStr = JSON.stringify(this.contacts, null, 2);
+          const dataBlob = new Blob([dataStr], { type: 'application/json' });
+          const url = URL.createObjectURL(dataBlob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `contacts_${new Date().getTime()}.json`;
+          link.click();
+          URL.revokeObjectURL(url);
+
+          this.showToast('تم التصدير', 'تم تصدير جهات الاتصال بنجاح', 'bi bi-download', '#339af0');
+        },
+        importContacts(event) {
+          const file = event.target.files[0];
+          if (!file) return;
+
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            try {
+              const importedContacts = JSON.parse(e.target.result);
+
+              if (!Array.isArray(importedContacts)) {
+                this.showAlert('error', 'خطأ', 'صيغة الملف غير صحيحة. يجب أن يكون الملف يحتوي على مصفوفة من جهات الاتصال');
+                event.target.value = '';
+                return;
+              }
+
+              const validContacts = importedContacts.filter(contact =>
+                contact && contact.name && contact.phone
+              );
+
+              if (validContacts.length === 0) {
+                this.showAlert('error', 'خطأ', 'الملف لا يحتوي على جهات اتصال صحيحة');
+                event.target.value = '';
+                return;
+              }
+
+              const processedContacts = validContacts.map(contact => ({
+                id: contact.id || Date.now() + Math.random(),
+                name: contact.name,
+                phone: contact.phone,
+                bio: contact.bio || '',
+                category: contact.category || 'أخرى',
+                image: contact.image || ''
+              }));
+
+              this.contacts = [...this.contacts, ...processedContacts];
+              this.saveContacts();
+
+              this.showToast('تم الاستيراد', `تم استيراد ${processedContacts.length} جهة اتصال بنجاح`, 'bi bi-upload', '#51cf66');
+            } catch (error) {
+              this.showAlert('error', 'خطأ', 'حدث خطأ أثناء قراءة الملف. تأكد من أن الملف بصيغة JSON صحيحة');
+            }
+          };
+          reader.readAsText(file);
+          event.target.value = '';
+        },
         saveContacts() {
-          localStorage.setItem('contacts', JSON.stringify(this.contacts));
+          try {
+            window.storage.set('contacts', JSON.stringify(this.contacts)).catch(() => {
+              localStorage.setItem('contacts', JSON.stringify(this.contacts));
+            });
+          } catch (e) {
+            localStorage.setItem('contacts', JSON.stringify(this.contacts));
+          }
         },
         loadContacts() {
-          const saved = localStorage.getItem('contacts');
-          if (saved) {
-            this.contacts = JSON.parse(saved);
+          try {
+            window.storage.get('contacts').then(result => {
+              if (result && result.value) {
+                try {
+                  this.contacts = JSON.parse(result.value);
+                } catch (e) {
+                  console.error('خطأ في تحليل البيانات المخزنة:', e);
+                }
+              }
+            }).catch(() => {
+              const saved = localStorage.getItem('contacts');
+              if (saved) {
+                try {
+                  this.contacts = JSON.parse(saved);
+                } catch (e) {
+                  console.error('خطأ في تحليل البيانات المحلية:', e);
+                }
+              }
+            });
+          } catch (e) {
+            const saved = localStorage.getItem('contacts');
+            if (saved) {
+              try {
+                this.contacts = JSON.parse(saved);
+              } catch (err) {
+                console.error('خطأ في تحميل البيانات:', err);
+              }
+            }
           }
         },
         showToast(title, message, icon, color) {
@@ -969,7 +1306,18 @@
             case 'error': return 'bi bi-x-circle-fill';
             case 'warning': return 'bi bi-exclamation-triangle-fill';
             case 'confirm': return 'bi bi-question-circle-fill';
+            case 'edit': return 'bi bi-pencil-square';
             default: return 'bi bi-info-circle-fill';
+          }
+        },
+        nextPage() {
+          if (this.currentPage < this.totalPages) {
+            this.currentPage++;
+          }
+        },
+        previousPage() {
+          if (this.currentPage > 1) {
+            this.currentPage--;
           }
         }
       },
