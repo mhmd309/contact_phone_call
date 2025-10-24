@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تطبيق تسجيل أرقام الهواتف</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <!-- Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Beiruti&display=swap" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Beiruti';
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+      min-height: 100vh;
+      padding: 20px;
+      position: relative;
+      direction: rtl;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+      pointer-events: none;
+    }
+
+    .app-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .app-header {
+      text-align: center;
+      margin-bottom: 40px;
+      color: white;
+    }
+
+    .app-header h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .app-header p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    @media (max-width: 992px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      overflow: hidden;
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 25px 30px;
+      border: none;
+    }
+
+    .card-header h3 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-body {
+      padding: 30px;
+    }
+
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .form-control,
+    .form-select {
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      outline: none;
+    }
+
+    .form-select {
+      direction: ltr;
+    }
+
+    /* Image Upload Area */
+    .image-upload-area {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .avatar-preview {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin: 0 auto 15px;
+      overflow: hidden;
+      border: 4px solid #667eea;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-preview:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .avatar-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-preview-placeholder {
+      font-size: 3rem;
+      color: #999;
+    }
+
+    .file-input-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .file-input-wrapper input[type="file"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .file-input-label {
+      display: inline-block;
+      padding: 10px 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .file-input-label:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Buttons */
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 12px;
+      padding: 14px 28px;
+      font-weight: 600;
+      font-size: 1.05rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Search and Filter */
+    .search-filter-bar {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .search-wrapper {
+      position: relative;
+      flex: 1;
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+      pointer-events: none;
+    }
+
+    .search-input {
+      padding-right: 45px;
+    }
+
+    /* Stats Card */
+    .stats-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+    }
+
+    .stats-icon {
+      font-size: 2.5rem;
+      opacity: 0.9;
+    }
+
+    .stats-content h4 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .stats-content p {
+      margin: 0;
+      opacity: 0.9;
+    }
+
+    /* Contact Item */
+    .contact-item {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .contact-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+      border-color: #667eea;
+    }
+
+    .contact-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid #667eea;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+
+    .contact-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .contact-info {
+      flex: 1;
+    }
+
+    .contact-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .contact-phone {
+      font-size: 1.1rem;
+      color: #666;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .contact-phone a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .contact-phone a:hover {
+      text-decoration: underline;
+    }
+
+    .contact-category {
+      display: inline-block;
+      padding: 6px 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .contact-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-action {
+      width: 45px;
+      height: 45px;
+      border-radius: 12px;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-delete {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+      color: white;
+    }
+
+    .btn-delete:hover {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+    }
+
+    .btn-call {
+      background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+      color: white;
+    }
+
+    .btn-call:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(81, 207, 102, 0.4);
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+
+    .empty-state i {
+      font-size: 5rem;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+
+    .empty-state h4 {
+      font-size: 1.5rem;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .empty-state p {
+      color: #999;
+    }
+
+    /* Custom Alert Styles */
+    .custom-alert-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: scale(0.8) translateY(-50px);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .custom-alert-box {
+      background: white;
+      border-radius: 24px;
+      padding: 40px;
+      max-width: 450px;
+      width: 90%;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+      animation: slideDown 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-align: center;
+    }
+
+    .custom-alert-icon {
+      font-size: 5rem;
+      margin-bottom: 25px;
+    }
+
+    .custom-alert-icon.success {
+      color: #51cf66;
+    }
+
+    .custom-alert-icon.error {
+      color: #ff6b6b;
+    }
+
+    .custom-alert-icon.warning {
+      color: #ffd43b;
+    }
+
+    .custom-alert-icon.confirm {
+      color: #667eea;
+    }
+
+    .custom-alert-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .custom-alert-message {
+      font-size: 1.1rem;
+      color: #666;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .custom-alert-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    .custom-alert-btn {
+      padding: 14px 32px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 700;
+    }
+
+    .custom-alert-btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .custom-alert-btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+    }
+
+    .custom-alert-btn-secondary {
+      background: #f1f3f5;
+      color: #495057;
+    }
+
+    .custom-alert-btn-secondary:hover {
+      background: #e9ecef;
+    }
+
+    /* Toast Notification */
+    .toast-notification {
+      position: fixed;
+      top: 30px;
+      right: 30px;
+      background: white;
+      padding: 20px 28px;
+      border-radius: 16px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+      z-index: 10000;
+      animation: slideInRight 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      max-width: 400px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      border-left: 5px solid;
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translateX(450px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideOutRight {
+      to {
+        transform: translateX(450px);
+        opacity: 0;
+      }
+    }
+
+    .toast-notification.hiding {
+      animation: slideOutRight 0.4s ease;
+    }
+
+    .toast-icon {
+      font-size: 2.2rem;
+      flex-shrink: 0;
+    }
+
+    .toast-content {
+      flex: 1;
+    }
+
+    .toast-title {
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: #333;
+      font-size: 1.1rem;
+    }
+
+    .toast-message {
+      font-size: 0.95rem;
+      color: #666;
+    }
+
+    /* Category Colors */
+    .category-عائلة {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    }
+
+    .category-أصدقاء {
+      background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+    }
+
+    .category-عمل {
+      background: linear-gradient(135deg, #339af0 0%, #228be6 100%);
+    }
+
+    .category-أخرى {
+      background: linear-gradient(135deg, #ffd43b 0%, #fab005 100%);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app" class="app-container">
+    <!-- Custom Alert Component -->
+    <div v-if="alertData.show" class="custom-alert-overlay" @click="closeAlert">
+      <div class="custom-alert-box" @click.stop>
+        <div class="custom-alert-icon" :class="alertData.type">
+          <i :class="getAlertIcon()"></i>
+        </div>
+        <div class="custom-alert-title">{{ alertData.title }}</div>
+        <div class="custom-alert-message">{{ alertData.message }}</div>
+        <div class="custom-alert-buttons">
+          <button v-if="alertData.type === 'confirm'" @click="confirmAction"
+            class="custom-alert-btn custom-alert-btn-primary">
+            تأكيد
+          </button>
+          <button @click="closeAlert" class="custom-alert-btn"
+            :class="alertData.type === 'confirm' ? 'custom-alert-btn-secondary' : 'custom-alert-btn-primary'">
+            {{ alertData.type === 'confirm' ? 'إلغاء' : 'حسناً' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div v-for="toast in toasts" :key="toast.id" class="toast-notification" :class="{ hiding: toast.hiding }"
+      :style="{ borderLeftColor: toast.color }">
+      <div class="toast-icon" :style="{ color: toast.color }">
+        <i :class="toast.icon"></i>
+      </div>
+      <div class="toast-content">
+        <div class="toast-title">{{ toast.title }}</div>
+        <div class="toast-message">{{ toast.message }}</div>
+      </div>
+    </div>
+
+    <!-- App Header -->
+    <div class="app-header">
+      <h1><i class="bi bi-phone-fill"></i> دفتر هواتف المحمول الخاصة بك</h1>
+      <p>نظام احترافي لإدارة جهات الاتصال</p>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="main-grid">
+      <!-- Add Contact Card -->
+      <div class="card">
+        <div class="card-header">
+          <h3>
+            <i class="bi bi-person-plus-fill"></i>
+            إضافة جهة اتصال
+          </h3>
+        </div>
+        <div class="card-body">
+          <form @submit.prevent="addContact">
+            <!-- Image Upload -->
+            <div class="image-upload-area">
+              <div class="avatar-preview" @click="$refs.fileInput.click()">
+                <img v-if="newContact.image" :src="newContact.image" alt="صورة جهة الاتصال">
+                <div v-else class="avatar-preview-placeholder">
+                  <i class="bi bi-camera-fill"></i>
+                </div>
+              </div>
+              <div class="file-input-wrapper">
+                <input type="file" ref="fileInput" @change="handleImageUpload" accept="image/*">
+                <label class="file-input-label" @click="$refs.fileInput.click()">
+                  <i class="bi bi-upload ms-1"></i> اختر صورة
+                </label>
+              </div>
+            </div>
+
+            <!-- Name Input -->
+            <div class="form-group">
+              <label class="form-label">
+                <i class="bi bi-person ms-1"></i> الاسم
+              </label>
+              <input v-model="newContact.name" type="text" class="form-control" placeholder="أدخل اسم جهة الاتصال"
+                required>
+            </div>
+
+            <!-- Phone Input -->
+            <div class="form-group">
+              <label class="form-label">
+                <i class="bi bi-telephone ms-1"></i> رقم الهاتف
+              </label>
+              <input style="direction: rtl;" v-model="newContact.phone" type="tel" class="form-control" placeholder="أدخل رقم الهاتف" required>
+            </div>
+
+            <!-- Category Select -->
+            <div class="form-group">
+              <label class="form-label">
+                <i class="bi bi-tag ms-1"></i> الفئة
+              </label>
+              <select v-model="newContact.category" class="form-select">
+                <option value="عائلة">عائلة</option>
+                <option value="أصدقاء">أصدقاء</option>
+                <option value="عمل">عمل</option>
+                <option value="أخرى">أخرى</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+              <i class="bi bi-plus-circle ms-1"></i> إضافة جهة اتصال
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Contacts List Card -->
+      <div class="card">
+        <div class="card-header">
+          <h3>
+            <i class="bi bi-people-fill"></i>
+            قائمة جهات الاتصال
+          </h3>
+        </div>
+        <div class="card-body">
+          <!-- Stats -->
+          <div class="stats-card">
+            <div class="stats-icon">
+              <i class="bi bi-person-lines-fill"></i>
+            </div>
+            <div class="stats-content">
+              <h4>{{ filteredContacts.length }}</h4>
+              <p>جهة اتصال</p>
+            </div>
+          </div>
+
+          <!-- Search and Filter -->
+          <div class="search-filter-bar">
+            <div class="search-wrapper">
+              <i class="bi bi-search search-icon"></i>
+              <input v-model="searchQuery" type="text" class="form-control search-input"
+                placeholder="ابحث عن جهة اتصال...">
+            </div>
+            <select v-model="filterCategory" class="form-select" style="max-width: 200px;">
+              <option value="">جميع الفئات</option>
+              <option value="عائلة">عائلة</option>
+              <option value="أصدقاء">أصدقاء</option>
+              <option value="عمل">عمل</option>
+              <option value="أخرى">أخرى</option>
+            </select>
+          </div>
+
+          <!-- Contacts List -->
+          <div v-if="filteredContacts.length > 0">
+            <div v-for="contact in filteredContacts" :key="contact.id" class="contact-item">
+              <div class="contact-avatar">
+                <img v-if="contact.image" :src="contact.image" :alt="contact.name">
+                <span v-else>{{ getInitials(contact.name) }}</span>
+              </div>
+              <div class="contact-info">
+                <div class="contact-name">{{ contact.name }}</div>
+                <div class="contact-phone">
+                  <i class="bi bi-telephone-fill ms-1"></i>
+                  <a :href="'tel:' + contact.phone" style="text-decoration: underline;">{{ contact.phone }}</a>
+                </div>
+                <span class="contact-category" :class="'category-' + contact.category">
+                  {{ contact.category }}
+                </span>
+              </div>
+              <div class="contact-actions">
+                <a :href="'https://wa.me/' + contact.phone" class="btn-action btn-call">
+                  <i class="bi bi-chat-left-text"></i>
+                </a>
+                <button @click="deleteContact(contact.id)" class="btn-action btn-delete">
+                  <i class="bi bi-trash-fill"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div v-else class="empty-state">
+            <i class="bi bi-inbox"></i>
+            <h4>لا توجد جهات اتصال</h4>
+            <p>ابدأ بإضافة جهة اتصال جديدة من القائمة الجانبية</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vue.js -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@3.3.4/dist/vue.global.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          contacts: [],
+          newContact: {
+            name: '',
+            phone: '',
+            category: 'عائلة',
+            image: ''
+          },
+          searchQuery: '',
+          filterCategory: '',
+          alertData: {
+            show: false,
+            type: 'success',
+            title: '',
+            message: '',
+            confirmCallback: null
+          },
+          toasts: [],
+          toastIdCounter: 0,
+          contactToDelete: null
+        }
+      },
+      computed: {
+        filteredContacts() {
+          let result = this.contacts;
+
+          if (this.searchQuery) {
+            result = result.filter(contact =>
+              contact.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+              contact.phone.includes(this.searchQuery)
+            );
+          }
+
+          if (this.filterCategory) {
+            result = result.filter(contact =>
+              contact.category === this.filterCategory
+            );
+          }
+
+          return result;
+        }
+      },
+      methods: {
+        handleImageUpload(event) {
+          const file = event.target.files[0];
+          if (file) {
+            if (file.size > 5000000) {
+              this.showAlert('warning', 'تنبيه', 'حجم الصورة كبير جداً. الرجاء اختيار صورة أصغر من 5 ميجابايت');
+              return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              this.newContact.image = e.target.result;
+            };
+            reader.readAsDataURL(file);
+          }
+        },
+        getInitials(name) {
+          const names = name.trim().split(' ');
+          if (names.length >= 2) {
+            return names[0][0] + names[1][0];
+          }
+          return names[0][0];
+        },
+        showAlert(type, title, message, confirmCallback = null) {
+          this.alertData = {
+            show: true,
+            type: type,
+            title: title,
+            message: message,
+            confirmCallback: confirmCallback
+          };
+        },
+        closeAlert() {
+          this.alertData.show = false;
+          this.contactToDelete = null;
+        },
+        confirmAction() {
+          if (this.alertData.confirmCallback) {
+            this.alertData.confirmCallback();
+          }
+          this.closeAlert();
+        },
+        confirmAction() {
+          if (this.alertData.confirmCallback) {
+            this.alertData.confirmCallback();
+          }
+          this.closeAlert();
+        },
+        addContact() {
+          if (!this.newContact.name || !this.newContact.phone) {
+            this.showAlert('error', 'خطأ', 'الرجاء إدخال الاسم ورقم الهاتف');
+            return;
+          }
+
+          const newContact = {
+            id: Date.now(),
+            name: this.newContact.name.trim(),
+            phone: this.newContact.phone.trim(),
+            category: this.newContact.category,
+            image: this.newContact.image
+          };
+
+          this.contacts.push(newContact);
+          this.saveContacts();
+
+          this.showToast('تمت الإضافة', 'تمت إضافة جهة الاتصال بنجاح', 'bi bi-check-circle-fill', '#51cf66');
+
+          // إعادة تعيين الحقول
+          this.newContact = {
+            name: '',
+            phone: '',
+            category: 'عائلة',
+            image: ''
+          };
+        },
+        deleteContact(id) {
+          const contact = this.contacts.find(c => c.id === id);
+          if (!contact) return;
+
+          this.contactToDelete = id;
+          this.showAlert(
+            'confirm',
+            'تأكيد الحذف',
+            `هل أنت متأكد أنك تريد حذف ${contact.name}؟`,
+            () => {
+              this.contacts = this.contacts.filter(c => c.id !== id);
+              this.saveContacts();
+              this.showToast('تم الحذف', 'تم حذف جهة الاتصال بنجاح', 'bi bi-trash-fill', '#ff6b6b');
+            }
+          );
+        },
+        saveContacts() {
+          localStorage.setItem('contacts', JSON.stringify(this.contacts));
+        },
+        loadContacts() {
+          const saved = localStorage.getItem('contacts');
+          if (saved) {
+            this.contacts = JSON.parse(saved);
+          }
+        },
+        showToast(title, message, icon, color) {
+          const id = ++this.toastIdCounter;
+          const toast = { id, title, message, icon, color, hiding: false };
+          this.toasts.push(toast);
+
+          setTimeout(() => {
+            toast.hiding = true;
+            setTimeout(() => {
+              this.toasts = this.toasts.filter(t => t.id !== id);
+            }, 400);
+          }, 3000);
+        },
+        getAlertIcon() {
+          switch (this.alertData.type) {
+            case 'success': return 'bi bi-check-circle-fill';
+            case 'error': return 'bi bi-x-circle-fill';
+            case 'warning': return 'bi bi-exclamation-triangle-fill';
+            case 'confirm': return 'bi bi-question-circle-fill';
+            default: return 'bi bi-info-circle-fill';
+          }
+        }
+      },
+      mounted() {
+        this.loadContacts();
+      }
+    }).mount('#app');
+  </script>
+</body>
+
+</html>
